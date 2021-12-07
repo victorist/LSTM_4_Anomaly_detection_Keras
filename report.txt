@@ -1,0 +1,23 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 1 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: Sensor_Anomaly_Detection.py
+--------------------------------------------------------------------------------
+Sensor_Anomaly_Detection.py:246:0: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'Sensor_Anomaly_Detection.py'
+ outputting to 'Sensor2_Anomaly_Detection.py'
+--------------------------------------------------------------------------------
+
+30:0: INFO: Renamed 'tf.logging.set_verbosity' to 'tf.compat.v1.logging.set_verbosity'
+30:25: INFO: Renamed 'tf.logging.ERROR' to 'tf.compat.v1.logging.ERROR'
+246:0: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
