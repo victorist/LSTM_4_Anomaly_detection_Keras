@@ -1,4 +1,4 @@
-S# To add a new cell, type '# %%'
+# To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
 # %%
 from IPython import get_ipython
@@ -23,12 +23,14 @@ import seaborn as sns
 sns.set(color_codes=True)
 import matplotlib.pyplot as plt
 get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline', '_stack_depth=2')
+# About run_line_magic > https://ipython.readthedocs.io/en/stable/api/generated/IPython.core.interactiveshell.html?highlight=run_line_magic#IPython.core.interactiveshell.InteractiveShell.run_line_magic
 
 from numpy.random import seed
 # from tensorflow import set_random_seed
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-tf.random.set_seed() 
+tf.random.set_seed(123) 
 
 
 from keras.layers import Input, Dropout, Dense, LSTM, TimeDistributed, RepeatVector
@@ -39,7 +41,7 @@ from keras import regularizers
 # %%
 # set random seed
 seed(10)
-set_random_seed(10)
+#set_random_seed(10)
 
 # %% [markdown]
 # # Data loading and pre-processing
@@ -47,7 +49,8 @@ set_random_seed(10)
 
 # %%
 # load, average and merge sensor samples
-data_dir = 'data/bearing_data'
+# data_dir = 'data/bearing_data'
+data_dir = '/Users/vistratov/dev_data/data/bearing_data'
 merged_data = pd.DataFrame()
 
 for filename in os.listdir(data_dir):
