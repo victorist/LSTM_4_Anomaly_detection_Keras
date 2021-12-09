@@ -6,7 +6,7 @@ from IPython import get_ipython
 # %% [markdown]
 # ## Bearing Failure Anomaly Detection
 # In this workbook, we use an autoencoder neural network to identify vibrational anomalies from sensor readings in a set of bearings. The goal is to be able to predict future bearing failures before they happen. The vibrational sensor readings are from the NASA Acoustics and Vibration Database. Each data set consists of individual files that are 1-second vibration signal snapshots recorded at 10 minute intervals. Each file contains 20,480 sensor data points that were obtained by reading the bearing sensors at a sampling rate of 20 kHz.
-# 
+
 # This autoencoder neural network model is created using Long Short-Term Memory (LSTM) recurrent neural network (RNN) cells within the Keras / TensorFlow framework.
 
 # %%
@@ -22,7 +22,9 @@ import joblib
 import seaborn as sns
 sns.set(color_codes=True)
 import matplotlib.pyplot as plt
+
 get_ipython().run_line_magic('matplotlib', 'inline')
+
 # get_ipython().run_line_magic('matplotlib', 'inline', '_stack_depth=2')
 # About run_line_magic > https://ipython.readthedocs.io/en/stable/api/generated/IPython.core.interactiveshell.html?highlight=run_line_magic#IPython.core.interactiveshell.InteractiveShell.run_line_magic
 
@@ -160,7 +162,7 @@ def autoencoder_model(X):
 # %%
 # create the autoencoder model
 model = autoencoder_model(X_train)
-model.compile(optimizer='adam', loss='mae')
+model.compile(optimizer='adam', loss='mae')     
 model.summary()
 
 
@@ -168,8 +170,7 @@ model.summary()
 # fit the model to the data
 nb_epochs = 100
 batch_size = 10
-history = model.fit(X_train, X_train, epochs=nb_epochs, batch_size=batch_size,
-                    validation_split=0.05).history
+history = model.fit(X_train, X_train, epochs=nb_epochs, batch_size=batch_size, validation_split=0.05).history
 
 
 # %%
