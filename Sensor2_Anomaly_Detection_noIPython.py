@@ -46,6 +46,8 @@ from keras import regularizers
 # the vibration recordings over the 20,480 datapoints in each file. 
 # We then merge together everything in a single dataframe.
 
+save_dir = "results/bearing_failure/"
+
 # load, average and merge sensor samples
 # data_dir = 'data/bearing_data'
 data_dir = '/Users/vistratov/dev_data/data/bearing_data'
@@ -64,8 +66,8 @@ merged_data.columns = ['Bearing 1', 'Bearing 2', 'Bearing 3', 'Bearing 4']
 merged_data.index = pd.to_datetime(merged_data.index, format='%Y.%m.%d.%H.%M.%S')
 merged_data = merged_data.sort_index()
 
-merged_data.to_csv('Averaged_BearingTest_Dataset.csv')
-print("\nDataset seved in the Averaged_BearingTest_Dataset.csv\n")
+merged_data.to_csv(save_dir + 'Averaged_BearingTest_Dataset.csv')
+print("\nDataset seved in the"+ save_dir +"Averaged_BearingTest_Dataset.csv\n")
 print("Dataset shape:", merged_data.shape)
 print("\nDataframe:\n")
 print(merged_data.head(-3))
@@ -78,6 +80,7 @@ test = merged_data['2004-02-15 12:52:39':]
 print("\nTraining dataset shape:", train.shape)
 print("Test dataset shape:", test.shape)
 
+
 fig, ax = plt.subplots(figsize=(14, 6), dpi=80)
 ax.plot(train['Bearing 1'], label='Bearing 1', color='blue', animated = True, linewidth=1)
 ax.plot(train['Bearing 2'], label='Bearing 2', color='red', animated = True, linewidth=1)
@@ -86,7 +89,7 @@ ax.plot(train['Bearing 4'], label='Bearing 4', color='black', animated = True, l
 plt.legend(loc='lower left')
 ax.set_title('Show 1 - Bearing Sensor Training Data', fontsize=16)
 #plt.show()
-plt.savefig('Show 1 - Bearing Sensor Training Data.pdf')
+plt.savefig(save_dir+'Show 1 - Bearing Sensor Training Data.pdf')
 
 
 # Let’s get a different perspective of the data by transforming the signal from the time domain to the frequency domain using a discrete Fourier transform.
@@ -104,7 +107,7 @@ ax.plot(train_fft[:,3].real, label='Bearing 4', color='black', animated = True, 
 plt.legend(loc='lower left')
 ax.set_title('Show 2 - Bearing Sensor Training Frequency Data', fontsize=16)
 # plt.show()
-plt.savefig('Show 2 - Bearing Sensor Training Frequency Data.pdf')
+plt.savefig(save_dir+'Show 2 - Bearing Sensor Training Frequency Data.pdf')
 
 
 # frequencies of the degrading sensor signal
@@ -116,7 +119,7 @@ ax.plot(test_fft[:,3].real, label='Bearing 4', color='black', animated = True, l
 plt.legend(loc='lower left')
 ax.set_title('Show 3 - Bearing Sensor Test Frequency Data', fontsize=16)
 # plt.show()
-plt.savefig('Show 3 - Bearing Sensor Test Frequency Data.pdf')
+plt.savefig(save_dir+'Show 3 - Bearing Sensor Test Frequency Data.pdf')
 
 
 # normalize the data
@@ -134,18 +137,20 @@ print("Test data shape:", X_test.shape)
 
 # MODEL
 # define the autoencoder network model
+
 def autoencoder_model(X):
     inputs = Input(shape=(X.shape[1], X.shape[2]))
     L1 = LSTM(16, activation='relu', return_sequences=True, 
-        kernel_regularizer=regularizers.l2(0.001))(inputs)
+                kernel_regularizer=regularizers.l2(0.00))(inputs)
     L2 = LSTM(4, activation='relu', return_sequences=False)(L1)
     L3 = RepeatVector(X.shape[1])(L2)
     L4 = LSTM(4, activation='relu', return_sequences=True)(L3)
     L5 = LSTM(16, activation='relu', return_sequences=True)(L4)
     output = TimeDistributed(Dense(X.shape[2]))(L5)    
-    
     model = Model(inputs=inputs, outputs=output)
     return model
+
+
 
 # create the autoencoder model
 model = autoencoder_model(X_train)
@@ -168,7 +173,7 @@ ax.set_ylabel('Loss (mae)')
 ax.set_xlabel('Epoch')
 ax.legend(loc='upper right')
 # plt.show()
-plt.savefig('Show 4 - The training losses.pdf')
+plt.savefig(save_dir+'Show 4 - The training losses.pdf')
 
 
 # # Distribution of Loss Function
@@ -227,5 +232,5 @@ scored.plot(logy=True,  figsize=(16,9), ylim=[1e-2,1e2], color=['blue','red'])
 # in advance of the actual physical failure. It is important to define a suitable 
 # threshold value for flagging anomalies while avoiding too many false positives during normal operating conditions.
 # save all model information, including weights, in h5 format
-model.save("Cloud_model.h5")
+model.save(save_dir+"Cloud_model.h5")
 print("\nModel saved in the Cloud_model.h5")
