@@ -29,16 +29,19 @@ import matplotlib.pyplot as plt
 # About run_line_magic > https://ipython.readthedocs.io/en/stable/api/generated/IPython.core.interactiveshell.html?highlight=run_line_magic#IPython.core.interactiveshell.InteractiveShell.run_line_magic
 
 from numpy.random import seed
-
+print('----------1')
 # from tensorflow import set_random_seed
-import tensorflow as tf
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-tf.random.set_seed(123) 
+import tensorflow as tf1
+
+tf1.compat.v1.logging.set_verbosity(tf1.compat.v1.logging.ERROR)
+print('----------2')
+
+tf1.random.set_seed(123) 
 
 from keras.layers import Input, Dropout, Dense, LSTM, TimeDistributed, RepeatVector
 from keras.models import Model
 from keras import regularizers
-
+print('Библиотеки импортированы успешно.')
 # # Data loading and pre-processing
 # An assumption is that mechanical degradation in the bearings occurs gradually over time; 
 # therefore, we use one datapoint every 10 minutes in the analysis. 
@@ -46,8 +49,9 @@ from keras import regularizers
 # the vibration recordings over the 20,480 datapoints in each file. 
 # We then merge together everything in a single dataframe.
 
-save_dir = "results/bearing_failure/"
-
+save_dir = 'results/bearing_failure/'
+print()
+print('Директория с данныйми: ', save_dir)
 # load, average and merge sensor samples
 # data_dir = 'data/bearing_data'
 data_dir = '/Users/vistratov/dev_data/data/bearing_data'
@@ -177,7 +181,10 @@ plt.savefig(save_dir+'Show 4 - The training losses.pdf')
 
 
 # # Distribution of Loss Function
-# By plotting the distribution of the calculated loss in the training set, one can use this to identify a suitable threshold value for identifying an anomaly. In doing this, one can make sure that this threshold is set above the “noise level” and that any flagged anomalies should be statistically significant above the background noise.
+# By plotting the distribution of the calculated loss in the training set, 
+# one can use this to identify a suitable threshold value for identifying an anomaly. 
+# In doing this, one can make sure that this threshold is set above the “noise level” and 
+# that any flagged anomalies should be statistically significant above the background noise.
 
 # plot the loss distribution of the training set
 X_pred = model.predict(X_train)
@@ -189,9 +196,11 @@ scored = pd.DataFrame(index=train.index)
 Xtrain = X_train.reshape(X_train.shape[0], X_train.shape[2])
 scored['Loss_mae'] = np.mean(np.abs(X_pred-Xtrain), axis = 1)
 plt.figure(figsize=(16,9), dpi=80)
-plt.title('Show 4 - Loss Distribution', fontsize=16)
+plt.title('Show 5 - Loss Distribution', fontsize=16)
 sns.distplot(scored['Loss_mae'], bins = 20, kde= True, color = 'blue');
 plt.xlim([0.0,.5])
+plt.savefig(save_dir+'Show 5 - Loss Distribution.pdf')
+
 
 # From the above loss distribution, let's try a threshold value of 0.275 for flagging an anomaly. We can then calculate the loss in the test set to check when the output crosses the anomaly threshold.
 
@@ -208,6 +217,8 @@ scored['Threshold'] = 0.275
 scored['Anomaly'] = scored['Loss_mae'] > scored['Threshold']
 print("Scored:")
 print(scored.head())
+print(scored.tail())
+
 
 # calculate the same metrics for the training set 
 # and merge all data in a single dataframe for plotting
@@ -222,11 +233,14 @@ scored_train['Threshold'] = 0.275
 scored_train['Anomaly'] = scored_train['Loss_mae'] > scored_train['Threshold']
 scored = pd.concat([scored_train, scored])
 
-# Having calculated the loss distribution and the anomaly threshold, we can visualize the model output in the time leading up to the bearing failure.
+# Having calculated the loss distribution and the anomaly threshold, 
+# we can visualize the model output in the time leading up to the bearing failure.
 
 
 # plot bearing failure time plot
 scored.plot(logy=True,  figsize=(16,9), ylim=[1e-2,1e2], color=['blue','red'])
+plt.title('Show 6 - Visualize the model output', fontsize=16)
+plt.savefig(save_dir+'Show 6 - Visualize the model output.pdf')
 
 # This analysis approach is able to flag the upcoming bearing malfunction well 
 # in advance of the actual physical failure. It is important to define a suitable 
