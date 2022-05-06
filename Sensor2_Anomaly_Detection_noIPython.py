@@ -23,20 +23,13 @@ import seaborn as sns
 sns.set(color_codes=True)
 import matplotlib.pyplot as plt
 
-########## get_ipython().run_line_magic('matplotlib', 'inline')
-
-# get_ipython().run_line_magic('matplotlib', 'inline', '_stack_depth=2')
-# About run_line_magic > https://ipython.readthedocs.io/en/stable/api/generated/IPython.core.interactiveshell.html?highlight=run_line_magic#IPython.core.interactiveshell.InteractiveShell.run_line_magic
-
 from numpy.random import seed
-print('----------1')
 # from tensorflow import set_random_seed
-import tensorflow as tf1
+import tensorflow as tf
 
-tf1.compat.v1.logging.set_verbosity(tf1.compat.v1.logging.ERROR)
-print('----------2')
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
-tf1.random.set_seed(123) 
+tf.random.set_seed(123) 
 
 from keras.layers import Input, Dropout, Dense, LSTM, TimeDistributed, RepeatVector
 from keras.models import Model
@@ -96,7 +89,8 @@ ax.set_title('Show 1 - Bearing Sensor Training Data', fontsize=16)
 plt.savefig(save_dir+'Show 1 - Bearing Sensor Training Data.pdf')
 
 
-# Let’s get a different perspective of the data by transforming the signal from the time domain to the frequency domain using a discrete Fourier transform.
+# Let’s get a different perspective of the data by transforming 
+# the signal from the time domain to the frequency domain using a discrete Fourier transform.
 
 # transforming data from the time domain to the frequency domain using fast Fourier transform
 train_fft = np.fft.fft(train)
@@ -113,7 +107,6 @@ ax.set_title('Show 2 - Bearing Sensor Training Frequency Data', fontsize=16)
 # plt.show()
 plt.savefig(save_dir+'Show 2 - Bearing Sensor Training Frequency Data.pdf')
 
-
 # frequencies of the degrading sensor signal
 fig, ax = plt.subplots(figsize=(14, 6), dpi=80)
 ax.plot(test_fft[:,0].real, label='Bearing 1', color='blue', animated = True, linewidth=1)
@@ -124,7 +117,6 @@ plt.legend(loc='lower left')
 ax.set_title('Show 3 - Bearing Sensor Test Frequency Data', fontsize=16)
 # plt.show()
 plt.savefig(save_dir+'Show 3 - Bearing Sensor Test Frequency Data.pdf')
-
 
 # normalize the data
 scaler = MinMaxScaler()
@@ -153,8 +145,6 @@ def autoencoder_model(X):
     output = TimeDistributed(Dense(X.shape[2]))(L5)    
     model = Model(inputs=inputs, outputs=output)
     return model
-
-
 
 # create the autoencoder model
 model = autoencoder_model(X_train)
@@ -218,7 +208,6 @@ scored['Anomaly'] = scored['Loss_mae'] > scored['Threshold']
 print("Scored:")
 print(scored.head())
 print(scored.tail())
-
 
 # calculate the same metrics for the training set 
 # and merge all data in a single dataframe for plotting
