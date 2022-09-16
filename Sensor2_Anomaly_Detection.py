@@ -52,7 +52,9 @@ from keras import regularizers
 # %%
 # load, average and merge sensor samples
 # data_dir = 'data/bearing_data'
-data_dir = '/Users/vistratov/dev_data/data/bearing_data'
+# data_dir = '/Users/vistratov/dev_data/data/bearing_data'
+data_dir = '/home/victor/Datasets/bearing_data' # на компьютере AI
+
 merged_data = pd.DataFrame()
 
 for filename in os.listdir(data_dir):
