@@ -62,7 +62,9 @@ for filename in os.listdir(data_dir):
     dataset_mean_abs = np.array(dataset.abs().mean())
     dataset_mean_abs = pd.DataFrame(dataset_mean_abs.reshape(1,4))
     dataset_mean_abs.index = [filename]
-    merged_data = merged_data.append(dataset_mean_abs)
+    # merged_data = merged_data.append(dataset_mean_abs) - we are using CONCAT instid APPEND
+    frames = [merged_data, dataset_mean_abs] 
+    merged_data = pd.concat(frames)
     
 merged_data.columns = ['Bearing 1', 'Bearing 2', 'Bearing 3', 'Bearing 4']
 
